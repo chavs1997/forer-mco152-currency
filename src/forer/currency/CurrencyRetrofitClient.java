@@ -24,7 +24,7 @@ public class CurrencyRetrofitClient {
 			public void onResponse(Call<CurrencyFeed> call, Response<CurrencyFeed> response) {
 				CurrencyFeed feed = response.body();
 
-				System.out.println(feed.getQuotes().toString());
+				System.out.println(feed.rateToUSD("USDBBD"));
 				System.exit(0);
 			}
 

@@ -26,8 +26,12 @@ public class CurrencyFeed {
 	public final String getSource() {
 		return source;
 	}
-	public final Map getQuotes() {
+	public final Map<String, Double> getQuotes() {
 		return quotes;
+	}
+	
+	public double rateToUSD(String currency) {
+		return quotes.get(currency);
 	}
 	
 	
