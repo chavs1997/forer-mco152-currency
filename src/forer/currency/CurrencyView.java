@@ -12,26 +12,6 @@ public class CurrencyView extends JFrame {
 	private JLabel result = new JLabel();
 	private JLabel resultLabel = new JLabel();
 
-	public final JTextField getCurrency() {
-		return currency;
-	}
-
-	public final JTextField getAmount() {
-		return amount;
-	}
-
-	public final JLabel getRate() {
-		return rate;
-	}
-
-	public final JLabel getResult() {
-		return result;
-	}
-
-	public final JLabel getResultLabel() {
-		return resultLabel;
-	}
-
 	public CurrencyView() {
 		setTitle("Dollar to Currency");
 		setSize(500, 350);
@@ -71,11 +51,11 @@ public class CurrencyView extends JFrame {
 				.addConverterFactory(GsonConverterFactory.create()).build();
 		CurrencyLayerService service = retrofit.create(CurrencyLayerService.class);
 
-		CurrencyController controller = new CurrencyController(this, service);
+		CurrencyController controller = new CurrencyController(service);
 
-		JButton button = new JButton("Refresh");
+		JButton button = new JButton("Search");
 		button.addActionListener(e -> {
-			controller.getCurrency();
+			controller.requestCurrencyFeed(currency, amount, result, rate);
 			resultLabel.setText(currency.getText());
 		});
 

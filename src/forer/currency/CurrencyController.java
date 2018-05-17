@@ -5,22 +5,14 @@ import javax.swing.JTextField;
 import retrofit2.*;
 
 public class CurrencyController {
-	private CurrencyView view;
 	private CurrencyLayerService service;
 
-	public CurrencyController(CurrencyView view, CurrencyLayerService service) {
-		this.view = view;
+	public CurrencyController(CurrencyLayerService service) {
 		this.service = service;
 	}
 
-	public void getCurrency() {
-		requestCurrencyFeed(service.getLiveCurrency(), view.getCurrency(), view.getAmount(), view.getResult(),
-				view.getRate());
-	}
-
-	public void requestCurrencyFeed(Call<CurrencyFeed> call, JTextField currency, JTextField amount, JLabel result,
-			JLabel rate) {
-		call.enqueue(new Callback<CurrencyFeed>() {
+	public void requestCurrencyFeed(JTextField currency, JTextField amount, JLabel result, JLabel rate) {
+		service.getLiveCurrency().enqueue(new Callback<CurrencyFeed>() {
 
 			@Override
 			public void onFailure(Call<CurrencyFeed> call, Throwable t) {
