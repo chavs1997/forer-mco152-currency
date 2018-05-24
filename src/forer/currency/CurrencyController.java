@@ -1,17 +1,18 @@
 package forer.currency;
 
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 import retrofit2.*;
 
 public class CurrencyController {
 	private CurrencyLayerService service;
+	private CurrencyView view;
 
-	public CurrencyController(CurrencyLayerService service) {
+	public CurrencyController(CurrencyLayerService service, CurrencyView view) {
 		this.service = service;
+		this.view = view;
 	}
 
-	public void requestCurrencyFeed(JTextField currency, JTextField amount, JLabel result, JLabel rate) {
+	public void requestCurrencyFeed() {
 		service.getLiveCurrency().enqueue(new Callback<CurrencyFeed>() {
 
 			@Override
@@ -22,25 +23,54 @@ public class CurrencyController {
 			@Override
 			public void onResponse(Call<CurrencyFeed> call, Response<CurrencyFeed> response) {
 				CurrencyFeed feed = response.body();
-				showAmountInCurrency(feed, currency, amount, result);
-				showRateToUSD(feed, currency, rate);
+				String[] list = feed.getCurrencyList();
+				for (String cur : list) {
+					view.getCurrency().addItem(cur);
+				}
+
 			}
 
 		});
 	}
 
-	public void showAmountInCurrency(CurrencyFeed feed, JTextField currency, JTextField amount, JLabel result) {
-		double value;
-		String trimmedAmount = amount.getText().trim();
-		if (trimmedAmount.charAt(0) == '$') {
-			value = Double.valueOf(trimmedAmount.substring(1));
-		} else {
-			value = Double.valueOf(trimmedAmount);
-		}
-		result.setText(String.valueOf(feed.amountInCurrency(currency.getText().trim(), value)));
+	public void fillInAmount(String currency, String amount, JLabel result, JLabel rate) {
+		service.getLiveCurrency().enqueue(new Callback<CurrencyFeed>() {
+
+			@Override
+			public void onFailure(Call<CurrencyFeed> call, Throwable t) {
+				t.printStackTrace();
+			}
+
+			@Override
+			public void onResponse(Call<CurrencyFeed> call, Response<CurrencyFeed> response) {
+				CurrencyFeed feed = response.body();
+				String[] list = feed.getCurrencyList();
+				for (String cur : list) {
+					view.getCurrency().addItem(cur);
+				}
+				if (!amount.isEmpty()) {
+					showAmountInCurrency(feed, currency, amount, result);
+					showRateToUSD(feed, currency, rate);
+				}
+			}
+
+		});
 	}
 
-	public void showRateToUSD(CurrencyFeed feed, JTextField currency, JLabel rate) {
-		rate.setText((String.valueOf(feed.rateToUSD(currency.getText().trim()))));
+	public void showAmountInCurrency(CurrencyFeed feed, String currency, String amount, JLabel result) {
+		double value;
+
+		if (amount.charAt(0) == '$' && amount.length() > 1) {
+			value = Double.parseDouble(amount.substring(1));
+		} else if (amount.charAt(0) != '$' && amount.length() >= 1) {
+			value = Double.parseDouble(amount);
+		} else {
+			value = 0;
+		}
+		result.setText(String.valueOf(feed.amountInCurrency(currency, value)));
+	}
+
+	public void showRateToUSD(CurrencyFeed feed, String currency, JLabel rate) {
+		rate.setText((String.valueOf(feed.rateToUSD(currency))));
 	}
 }
