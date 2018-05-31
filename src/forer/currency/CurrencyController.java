@@ -67,10 +67,10 @@ public class CurrencyController {
 		} else {
 			value = 0;
 		}
-		result.setText(String.valueOf(feed.amountInCurrency(currency, value)));
+		result.setText(String.format("%.2f", feed.amountInCurrency(currency, value)));
 	}
 
 	public void showRateToUSD(CurrencyFeed feed, String currency, JLabel rate) {
-		rate.setText((String.valueOf(feed.rateToUSD(currency))));
+		rate.setText(String.format("%.2f", feed.rateToUSD(currency)));
 	}
 }

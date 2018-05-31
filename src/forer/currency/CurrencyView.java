@@ -1,6 +1,9 @@
 package forer.currency;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -83,11 +86,21 @@ public class CurrencyView extends JFrame {
 				if (!amount.getText().isEmpty()) {
 					controller.fillInAmount(currency.getSelectedItem().toString(), amount.getText().trim(), result,
 							rate);
-					resultLabel.setText(currency.getSelectedItem().toString().trim().substring(3));
+					resultLabel.setText(currency.getSelectedItem().toString().trim());
 				}
 
 			}
 		};
+
+		currency.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!amount.getText().isEmpty()) {
+					controller.fillInAmount(currency.getSelectedItem().toString(), amount.getText().trim(), result,
+							rate);
+					resultLabel.setText(currency.getSelectedItem().toString().trim());
+				}
+			}
+		});
 
 		amount.getDocument().addDocumentListener(listen);
 		add(mainPanel);
