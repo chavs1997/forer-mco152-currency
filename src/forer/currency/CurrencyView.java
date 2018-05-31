@@ -12,23 +12,30 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CurrencyView extends JFrame {
 
-	Retrofit retrofit = new Retrofit.Builder().baseUrl("http://apilayer.net")
-			.addConverterFactory(GsonConverterFactory.create()).build();
-	CurrencyLayerService service = retrofit.create(CurrencyLayerService.class);
-
-	CurrencyController controller = new CurrencyController(service, this);
-
-	private JComboBox<String> currency = new JComboBox<String>();
-	private JTextField amount = new JTextField("$");
-	private JLabel rate = new JLabel();
-	private JLabel result = new JLabel();
-	private JLabel resultLabel = new JLabel();
+	Retrofit retrofit;
+	CurrencyLayerService service;
+	CurrencyController controller;
+	private JComboBox<String> currency;
+	private JTextField amount;
+	private JLabel rate;
+	private JLabel result;
+	private JLabel resultLabel;
 
 	public final JComboBox<String> getCurrency() {
 		return currency;
 	}
 
 	public CurrencyView() {
+		retrofit = new Retrofit.Builder().baseUrl("http://apilayer.net")
+				.addConverterFactory(GsonConverterFactory.create()).build();
+		service = retrofit.create(CurrencyLayerService.class);
+		controller = new CurrencyController(service, this);
+		currency = new JComboBox<String>();
+		amount = new JTextField("$");
+		rate = new JLabel();
+		result = new JLabel();
+		resultLabel = new JLabel();
+
 		setTitle("Dollar to Currency");
 		setSize(500, 350);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -44,7 +51,6 @@ public class CurrencyView extends JFrame {
 		constraint.gridy = 0;
 		constraint.fill = GridBagConstraints.BOTH;
 		constraint.insets = new Insets(3, 2, 3, 2);
-
 		mainPanel.add(new JLabel("Please select a currency:"), constraint);
 		constraint.gridy = 1;
 		mainPanel.add(new JLabel("Please enter a dollar amount to exchange:"), constraint);
@@ -54,7 +60,6 @@ public class CurrencyView extends JFrame {
 		mainPanel.add(new JLabel("Currency amount exchanged:"), constraint);
 		constraint.gridy = 0;
 		constraint.gridx = 1;
-
 		mainPanel.add(currency, constraint);
 		constraint.gridy = 1;
 		mainPanel.add(amount, constraint);
